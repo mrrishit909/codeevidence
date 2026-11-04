@@ -6,7 +6,8 @@
   "description": "CodeEvidence first executable synthetic slice: deterministic structural checks over labelled synthetic submissions, documents and associations. Not a clinical, coding or regulatory tool.",
   "scripts": {
     "test": "node --test \"tests/**/*.test.js\"",
-    "serve": "node scripts/serve.mjs"
+    "serve": "node scripts/serve.mjs",
+    "build": "node scripts/build.mjs"
   },
   "engines": {
     "node": ">=24"
