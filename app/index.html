@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CodeEvidence workbench — synthetic structural review</title>
+<meta name="description" content="CodeEvidence synthetic demo workbench: deterministic structural checks over fictitious submissions, documents and associations. Not a clinical or regulatory tool.">
+<style>
+  :root {
+    --paper: #f5efe2;
+    --paper-deep: #ece3cf;
+    --card: #fbf7ee;
+    --ink: #17150f;
+    --ink-soft: #4d4737;
+    --rule: #c9bea3;
+    --thread: #b3261e;
+    --thread-soft: #f1d6d3;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--paper); color: var(--ink); font-family: var(--sans); line-height: 1.45; }
+  body { margin: 0; min-height: 100vh; background-image: repeating-linear-gradient(0deg, transparent 0 27px, rgba(23,21,15,0.045) 27px 28px); }
+  a { color: var(--ink); text-decoration-color: var(--thread); }
+  h1, h2, h3 { font-weight: 600; letter-spacing: -0.01em; margin: 0 0 .4rem; }
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.05rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-soft); }
+  h3 { font-size: 1rem; }
+  code, .mono { font-family: var(--mono); font-size: .92em; }
+  .banner { background: var(--ink); color: var(--paper); padding: .55rem 1rem; font-size: .9rem; display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 5; }
+  .banner strong { color: #ffd7d3; letter-spacing: .06em; }
+  header.masthead { padding: 1.4rem 1rem .6rem; border-bottom: 2px solid var(--ink); display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
+  header.masthead p { margin: 0; color: var(--ink-soft); max-width: 62ch; }
+  main { padding: 1rem; display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr); max-width: 1280px; margin: 0 auto; }
+  @media (min-width: 720px) { main { grid-template-columns: 300px minmax(0, 1fr); } .span { grid-column: 1 / -1; } }
+  section.card { background: var(--card); border: 1px solid var(--rule); border-radius: 3px; padding: 1rem; box-shadow: 0 1px 0 rgba(23,21,15,.08), 0 6px 14px -12px rgba(23,21,15,.5); position: relative; }
+  section.card::before { content: ""; position: absolute; left: 1rem; right: 1rem; top: 0; height: 2px; background: var(--rule); }
+  label { display: block; font-size: .85rem; color: var(--ink-soft); margin: .6rem 0 .25rem; }
+  select, input[type="search"], textarea { width: 100%; font: inherit; padding: .45rem .5rem; border: 1px solid var(--rule); border-radius: 3px; background: #fff; color: var(--ink); }
+  textarea { font-family: var(--mono); font-size: .85rem; min-height: 5.5rem; resize: vertical; }
+  button { font: inherit; font-weight: 600; padding: .5rem .85rem; border-radius: 3px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); cursor: pointer; min-height: 40px; }
+  button.secondary { background: transparent; color: var(--ink); }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visible, .finding:focus-visible { outline: 3px solid var(--thread); outline-offset: 2px; }
+  .actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .75rem; }
+  .status { margin: .5rem 0 0; font-size: .9rem; color: var(--ink-soft); min-height: 1.3em; }
+  .status[data-kind="error"] { color: var(--thread); }
+  ul.errors { margin: .5rem 0 0; padding-left: 1.1rem; font-family: var(--mono); font-size: .84rem; color: var(--thread); max-height: 16rem; overflow: auto; }
+  .empty { color: var(--ink-soft); font-style: italic; padding: .5rem 0; }
+  table { width: 100%; border-collapse: collapse; font-size: .86rem; }
+  th, td { text-align: left; padding: .35rem .4rem; border-bottom: 1px dashed var(--rule); vertical-align: top; word-break: break-word; }
+  th { font-weight: 600; color: var(--ink-soft); font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; }
+  td.mono { font-family: var(--mono); }
+  .tables { display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 1000px) { .tables { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .table-wrap { overflow-x: auto; }
+  .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .6rem; }
+  .stat { border: 1px solid var(--rule); background: #fff; padding: .6rem .7rem; border-radius: 3px; }
+  .stat .n { font-family: var(--mono); font-size: 1.5rem; font-weight: 600; display: block; }
+  .stat .l { font-size: .78rem; color: var(--ink-soft); }
+  .stat.flag .n { color: var(--thread); }
+  .byrule { margin-top: .75rem; display: flex; flex-wrap: wrap; gap: .4rem; }
+  .byrule span { font-family: var(--mono); font-size: .78rem; border: 1px solid var(--rule); padding: .15rem .4rem; border-radius: 2px; background: var(--paper-deep); }
+  .disclaimer { font-size: .85rem; color: var(--ink-soft); margin: .75rem 0 0; border-left: 3px solid var(--thread); padding-left: .6rem; }
+  .filters { display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem; align-items: end; }
+  @media (min-width: 720px) { .filters { grid-template-columns: 1fr 1fr auto; } }
+  .check { display: flex; align-items: center; gap: .4rem; margin: .6rem 0 .25rem; font-size: .85rem; color: var(--ink-soft); }
+  .check input { width: auto; }
+  ol.findings { list-style: none; margin: .75rem 0 0; padding: 0; display: grid; gap: .5rem; }
+  .finding { width: 100%; text-align: left; background: #fff; color: var(--ink); border: 1px solid var(--rule); border-left: 4px solid var(--thread); padding: .55rem .7rem; border-radius: 3px; font-weight: 400; display: grid; gap: .15rem; }
+  .finding[aria-pressed="true"] { background: var(--thread-soft); }
+  .finding .rule { font-family: var(--mono); font-weight: 600; font-size: .85rem; }
+  .finding .ids { font-family: var(--mono); font-size: .8rem; color: var(--ink-soft); }
+  .finding .ids .thread { color: var(--thread); }
+  .finding .mark { font-size: .75rem; color: var(--ink-soft); }
+  .detail { border-color: var(--ink); }
+  .detail dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .25rem .75rem; margin: .5rem 0; font-size: .88rem; }
+  .detail dt { color: var(--ink-soft); }
+  .detail dd { margin: 0; font-family: var(--mono); word-break: break-word; }
+  .cards { display: grid; gap: .6rem; grid-template-columns: minmax(0, 1fr); margin-top: .5rem; }
+  @media (min-width: 720px) { .cards { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); } }
+  .index-card { background: #fff; border: 1px solid var(--rule); border-radius: 3px; padding: .6rem .7rem; font-size: .84rem; position: relative; }
+  .index-card::after { content: ""; position: absolute; top: -1px; left: 1.2rem; width: 10px; height: 10px; border-radius: 50%; background: var(--thread); box-shadow: 0 0 0 2px #fff; }
+  .index-card h4 { margin: 0 0 .3rem; font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); }
+  .index-card .kv { font-family: var(--mono); display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .1rem .6rem; word-break: break-word; }
+  .index-card .kv span:nth-child(odd) { color: var(--ink-soft); }
+  .thread-line { height: 2px; background: var(--thread); margin: .4rem 0; opacity: .7; }
+  .note-view { margin-top: .6rem; font-size: .86rem; background: var(--paper-deep); padding: .5rem .6rem; border-radius: 3px; white-space: pre-wrap; word-break: break-word; }
+  .counter { font-size: .75rem; color: var(--ink-soft); text-align: right; }
+  footer { padding: 1.5rem 1rem 2.5rem; font-size: .82rem; color: var(--ink-soft); max-width: 1280px; margin: 0 auto; }
+  .hidden { display: none !important; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  @media (prefers-reduced-motion: no-preference) {
+    .finding, button { transition: background-color .15s ease, opacity .15s ease; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div class="banner" role="note">
+  <strong>SYNTHETIC DEMO DATA</strong>
+  <span>All members, encounters, documents and code references are fictitious. Structural checks only; no clinical, coding, payment or regulatory determination. Nothing leaves this page.</span>
+</div>
+<header class="masthead">
+  <div>
+    <h1>CodeEvidence workbench</h1>
+    <p>Evidence board for explicit submission-to-document associations. Rule pack <code id="rule-version-label">ce-structural-1</code> (fictional demo configuration). Zero findings means <em>structurally consistent, human clinical review required</em>.</p>
+  </div>
+  <a href="../README.md">About this demo (README, plain text)</a>
+</header>
+
+<main>
+  <section class="card" aria-labelledby="h-source">
+    <h2 id="h-source">1. Source</h2>
+    <label for="fixture-select">Named synthetic fixture</label>
+    <select id="fixture-select"></select>
+    <div class="actions">
+      <button id="load-fixture" type="button">Load fixture</button>
+    </div>
+    <p class="status" id="source-status" role="status" aria-live="polite">No source loaded. This public demo reads only the bundled synthetic fixtures above.</p>
+    <ul class="errors" id="error-list" aria-label="Import errors"></ul>
+    <div class="actions">
+      <button id="run-validation" type="button" disabled>Run validation</button>
+    </div>
+    <p class="status" id="run-status" role="status" aria-live="polite"></p>
+  </section>
+
+  <section class="card" aria-labelledby="h-summary">
+    <h2 id="h-summary">2. Counts</h2>
+    <div id="summary" class="summary"><p class="empty">Run validation to see counts.</p></div>
+    <div id="by-rule" class="byrule"></div>
+    <p class="disclaimer" id="disclaimer"></p>
+  </section>
+
+  <section class="card span" aria-labelledby="h-records">
+    <h2 id="h-records">Source records</h2>
+    <div class="tables" id="source-tables"><p class="empty">Load a fixture to inspect records.</p></div>
+  </section>
+
+  <section class="card span" aria-labelledby="h-findings">
+    <h2 id="h-findings">3. Findings</h2>
+    <div class="filters">
+      <div>
+        <label for="filter-rule">Rule</label>
+        <select id="filter-rule"><option value="">All rules</option></select>
+      </div>
+      <div>
+        <label for="filter-query">Entity search (submission, association, document ID)</label>
+        <input id="filter-query" type="search" autocomplete="off" placeholder="e.g. S4">
+      </div>
+      <label class="check" for="filter-missing"><input id="filter-missing" type="checkbox"> Missing associations only</label>
+    </div>
+    <p class="status" id="findings-status" role="status" aria-live="polite"></p>
+    <ol class="findings" id="findings-list" tabindex="-1"></ol>
+  </section>
+
+  <section class="card span detail hidden" id="detail" aria-labelledby="h-detail" tabindex="-1">
+    <h2 id="h-detail">4. Finding detail</h2>
+    <div id="detail-body"></div>
+    <div class="thread-line" aria-hidden="true"></div>
+    <h3>Cited input records (original, read-only)</h3>
+    <div class="cards" id="detail-cards"></div>
+    <div class="thread-line" aria-hidden="true"></div>
+    <h3>Reviewer layer (separate from findings)</h3>
+    <label for="decision-select">Decision</label>
+    <select id="decision-select"></select>
+    <label for="note-input">Note (max 2,000 characters; stored outside the frozen finding)</label>
+    <textarea id="note-input" maxlength="2000"></textarea>
+    <div class="counter" id="note-counter">0 / 2000</div>
+    <div class="actions">
+      <button id="save-review" type="button">Save note and decision</button>
+      <button id="close-detail" type="button" class="secondary">Close (Esc)</button>
+    </div>
+    <p class="status" id="review-status" role="status" aria-live="polite"></p>
+    <div id="review-view" class="note-view hidden"></div>
+  </section>
+
+  <section class="card span" aria-labelledby="h-export">
+    <h2 id="h-export">5. Export</h2>
+    <p class="status">Exports carry schema version, rule version, rule-pack provenance, a synthetic-data label, a SHA-256 of the raw input, the input snapshot, counts, every finding and the reviewer layer. Each CSV finding row also repeats the original values of the records it cites (submission tuple, association status, document date and signature flag). CSV cells that start with = + - @ tab or CR are neutralized.</p>
+    <div class="actions">
+      <button id="export-json" type="button" disabled>Export JSON</button>
+      <button id="export-csv" type="button" class="secondary" disabled>Export CSV</button>
+    </div>
+    <p class="status" id="export-status" role="status" aria-live="polite"></p>
+  </section>
+</main>
+<footer>
+  CodeEvidence synthetic slice. Not a diagnosis, coding, upcoding, repayment or CMS submission tool. Not HIPAA or RADV certification. Rule pack provenance: fictional configuration defined in CODEEVIDENCE-VERTICAL-SLICE.md.
+</footer>
+<script type="module" src="./app.js"></script>
+</body>
+</html>

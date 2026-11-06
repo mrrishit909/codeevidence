@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'none'; style-src 'self'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>CodeEvidence: a structural evidence index for synthetic submissions</title>
+<meta name="description" content="CodeEvidence lines up fictional submission code references against the document records they are explicitly linked to, flags structural gaps under the demo rule pack ce-structural-1, and leaves judgement to a human reviewer. Synthetic data only.">
+<link rel="stylesheet" href="./app/landing.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the register</a>
+
+<p class="boundary-strip" role="note"><strong>Synthetic demo.</strong> Every member, encounter, document and code reference on this site is fictional. There is no upload, and the demo must never hold real patient data.</p>
+
+<header class="masthead">
+  <a class="wordmark" href="./" aria-label="CodeEvidence home">
+    <svg class="mark" viewBox="0 0 40 28" aria-hidden="true" focusable="false">
+      <rect x="1" y="3" width="13" height="22" rx="1" fill="none" stroke="currentColor" stroke-width="2"/>
+      <rect x="26" y="3" width="13" height="22" rx="1" fill="none" stroke="currentColor" stroke-width="2"/>
+      <line x1="14" y1="14" x2="26" y2="14" class="mark-thread" stroke-width="2"/>
+      <circle cx="14" cy="14" r="2.6" class="mark-knot"/>
+      <circle cx="26" cy="14" r="2.6" class="mark-knot"/>
+    </svg>
+    <span>CodeEvidence</span>
+  </a>
+  <nav aria-label="Sections">
+    <ul>
+      <li><a href="#register">Register</a></li>
+      <li><a href="#workflow">Workflow</a></li>
+      <li><a href="#rules">Rule pack</a></li>
+      <li><a href="#boundary">Boundary</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="hero" aria-labelledby="h-hero">
+    <p class="kicker">Structural evidence index &middot; demo rule pack <code>ce-structural-1</code></p>
+    <h1 id="h-hero">Each code reference, read against the record it is linked to.</h1>
+    <div class="hero-side">
+      <p class="lede">CodeEvidence checks fictional submissions against their explicitly linked document records: missing links, duplicates, member and encounter mismatches, dates outside a demo window, absent signature metadata. It flags structure. A person makes every clinical call.</p>
+      <a class="cta" href="./app/">Open the workbench <span aria-hidden="true">&rarr;</span></a>
+      <p class="cta-note">Runs in your browser on bundled synthetic fixtures. No account, no network calls.</p>
+    </div>
+  </section>
+
+  <section class="folio" id="register" aria-labelledby="h-folio">
+    <header class="folio-head">
+      <p class="plate">Plate I &middot; golden case</p>
+      <h2 id="h-folio">Register of six fictional submissions</h2>
+      <p class="stamp">Synthetic<span>hand-labelled, not real records</span></p>
+    </header>
+
+    <div class="cols" aria-hidden="true">
+      <span>Submission code reference <em>(source fields)</em></span>
+      <span>Association <em>(supplied)</em></span>
+      <span>Document record <em>(source fields)</em></span>
+      <span>Margin <em>(structural findings)</em></span>
+    </div>
+
+    <ol class="register">
+      <li class="entry" data-result="none">
+        <div class="side side--sub">
+          <p class="tag">Submission</p>
+          <dl class="rec">
+            <div class="rec-id"><dt>submissionId</dt><dd>S1</dd></div>
+            <div><dt>memberId</dt><dd>M1</dd></div>
+            <div><dt>encounterId</dt><dd>E1</dd></div>
+            <div><dt>codeRef</dt><dd>C-A</dd></div>
+          </dl>
+        </div>
+        <div class="link">
+          <p class="tag">Association</p>
+          <p class="link-id"><span class="k">associationId</span> L1</p>
+          <p class="supplied"><span class="k">status, supplied fixture text</span> <q>asserted_support</q></p>
+        </div>
+        <div class="side side--doc">
+          <p class="tag">Document record</p>
+          <dl class="rec">
+            <div class="rec-id"><dt>documentId</dt><dd>D1</dd></div>
+            <div><dt>memberId</dt><dd>M1</dd></div>
+            <div><dt>encounterId</dt><dd>E1</dd></div>
+            <div><dt>serviceDate</dt><dd>2026-03-01</dd></div>
+            <div><dt>signatureMetadataPresent</dt><dd>true</dd></div>
+          </dl>
+        </div>
+        <div class="margin">
+          <p class="tag">Margin</p>
+          <p class="tally">0 findings</p>
+          <p class="note">Structurally consistent, human clinical review required.</p>
+        </div>
+      </li>
+
+      <li class="entry entry--orphan" data-result="flag">
+        <div class="side side--sub">
+          <p class="tag">Submission</p>
+          <dl class="rec">
+            <div class="rec-id"><dt>submissionId</dt><dd>S2</dd></div>
+            <div><dt>memberId</dt><dd>M2</dd></div>
+            <div><dt>encounterId</dt><dd>E2</dd></div>
+            <div><dt>codeRef</dt><dd>C-B</dd></div>
+          </dl>
+        </div>
+        <div class="link">
+          <p class="tag">Association</p>
+          <p class="link-id">No association supplied</p>
+        </div>
+        <div class="side side--doc side--empty">
+          <p class="tag">Document record</p>
+          <p class="void">No document record is linked to S2.</p>
+        </div>
+        <div class="margin">
+          <p class="tag">Margin</p>
+          <p class="tally">1 finding</p>
+          <ul class="finds"><li><code>NO_ASSOCIATION</code></li></ul>
+        </div>
+      </li>
+
+      <li class="entry" data-result="flag">
+        <div class="side side--sub">
+          <p class="tag">Submission</p>
+          <dl class="rec">
+            <div class="rec-id"><dt>submissionId</dt><dd>S3</dd></div>
+            <div class="cited"><dt>memberId</dt><dd>M3</dd></div>
+            <div><dt>encounterId</dt><dd>E3</dd></div>
+            <div><dt>codeRef</dt><dd>C-C</dd></div>
+          </dl>
+        </div>
+        <div class="link">
+          <p class="tag">Association</p>
+          <p class="link-id"><span class="k">associationId</span> L3</p>
+          <p class="supplied"><span class="k">status, supplied fixture text</span> <q>unreviewed</q></p>
+        </div>
+        <div class="side side--doc">
+          <p class="tag">Document record</p>
+          <dl class="rec">
+            <div class="rec-id"><dt>documentId</dt><dd>D2</dd></div>
+            <div class="cited"><dt>memberId</dt><dd>M9</dd></div>
+            <div><dt>encounterId</dt><dd>E3</dd></div>
+            <div><dt>serviceDate</dt><dd>2026-03-02</dd></div>
+            <div><dt>signatureMetadataPresent</dt><dd>true</dd></div>
+          </dl>
+        </div>
+        <div class="margin">
+          <p class="tag">Margin</p>
+          <p class="tally">1 finding</p>
+          <ul class="finds"><li><code>MEMBER_MISMATCH</code> <span>document M9, submission M3</span></li></ul>
+        </div>
+      </li>
+
+      <li class="entry" data-result="flag">
+        <div class="side side--sub">
+          <p class="tag">Submission</p>
+          <dl class="rec">
+            <div class="rec-id"><dt>submissionId</dt><dd>S4</dd></div>
+            <div><dt>memberId</dt><dd>M4</dd></div>
+            <div><dt>encounterId</dt><dd>E4</dd></div>
+            <div><dt>codeRef</dt><dd>C-D</dd></div>
+          </dl>
+        </div>
+        <div class="link">
+          <p class="tag">Association</p>
+          <p class="link-id"><span class="k">associationId</span> L4</p>
+          <p class="supplied"><span class="k">status, supplied fixture text</span> <q>unreviewed</q></p>
+        </div>
+        <div class="side side--doc">
+          <p class="tag">Document record</p>
+          <dl class="rec">
+            <div class="rec-id"><dt>documentId</dt><dd>D3</dd></div>
+            <div><dt>memberId</dt><dd>M4</dd></div>
+            <div><dt>encounterId</dt><dd>E4</dd></div>
+            <div class="cited"><dt>serviceDate</dt><dd>2025-12-31</dd></div>
+            <div class="cited"><dt>signatureMetadataPresent</dt><dd>false</dd></div>
+          </dl>
+        </div>
+        <div class="margin">
+          <p class="tag">Margin</p>
+          <p class="tally">2 findings</p>
+          <ul class="finds">
+            <li><code>OUTSIDE_DEMO_WINDOW</code> <span>2025-12-31 is before 2026-01-01</span></li>
+            <li><code>SIGNATURE_METADATA_MISSING</code></li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="entry" data-result="flag">
+        <div class="side side--sub">
+          <p class="tag">Submission</p>
+          <dl class="rec">
+            <div class="rec-id"><dt>submissionId</dt><dd>S5</dd></div>
+            <div><dt>memberId</dt><dd>M5</dd></div>
+            <div><dt>encounterId</dt><dd>E5</dd></div>
+            <div><dt>codeRef</dt><dd>C-E</dd></div>
+          </dl>
+        </div>
+        <div class="link">
+          <p class="tag">Association</p>
+          <p class="link-id"><span class="k">associationId</span> L5</p>
+          <p class="supplied cited-status"><span class="k">status, supplied fixture text</span> <q>asserted_conflict</q></p>
+        </div>
+        <div class="side side--doc">
+          <p class="tag">Document record</p>
+          <dl class="rec">
+            <div class="rec-id"><dt>documentId</dt><dd>D4</dd></div>
+            <div><dt>memberId</dt><dd>M5</dd></div>
+            <div><dt>encounterId</dt><dd>E5</dd></div>
+            <div><dt>serviceDate</dt><dd>2026-06-01</dd></div>
+            <div><dt>signatureMetadataPresent</dt><dd>true</dd></div>
+          </dl>
+        </div>
+        <div class="margin">
+          <p class="tag">Margin</p>
+          <p class="tally">1 finding</p>
+          <ul class="finds"><li><code>ASSERTED_CONFLICT</code> <span>restates the supplied text; not a conclusion</span></li></ul>
+        </div>
+      </li>
+
+      <li class="entry" data-result="flag">
+        <div class="side side--sub">
+          <p class="tag">Submission</p>
+          <dl class="rec">
+            <div class="rec-id"><dt>submissionId</dt><dd>S6</dd></div>
+            <div class="cited"><dt>memberId</dt><dd>M1</dd></div>
+            <div class="cited"><dt>encounterId</dt><dd>E1</dd></div>
+            <div class="cited"><dt>codeRef</dt><dd>C-A</dd></div>
+          </dl>
+        </div>
+        <div class="link">
+          <p class="tag">Association</p>
+          <p class="link-id"><span class="k">associationId</span> L6</p>
+          <p class="supplied"><span class="k">status, supplied fixture text</span> <q>asserted_support</q></p>
+        </div>
+        <div class="side side--doc">
+          <p class="tag">Document record</p>
+          <dl class="rec">
+            <div class="rec-id"><dt>documentId</dt><dd>D1</dd></div>
+            <div><dt>memberId</dt><dd>M1</dd></div>
+            <div><dt>encounterId</dt><dd>E1</dd></div>
+            <div><dt>serviceDate</dt><dd>2026-03-01</dd></div>
+            <div><dt>signatureMetadataPresent</dt><dd>true</dd></div>
+          </dl>
+        </div>
+        <div class="margin">
+          <p class="tag">Margin</p>
+          <p class="tally">1 finding</p>
+          <ul class="finds"><li><code>DUPLICATE_SUBMISSION</code> <span>same member, encounter and codeRef as S1 (canonical)</span></li></ul>
+        </div>
+      </li>
+    </ol>
+
+    <footer class="folio-foot">
+      <dl class="totals">
+        <div><dt>Submissions</dt><dd>6</dd></div>
+        <div><dt>Documents</dt><dd>4</dd></div>
+        <div><dt>Associations</dt><dd>5</dd></div>
+        <div><dt>Flagged submissions</dt><dd>5</dd></div>
+        <div><dt>Structurally consistent, human clinical review required</dt><dd>1</dd></div>
+        <div><dt>Findings</dt><dd>6</dd></div>
+      </dl>
+      <p class="reading">Read S6 closely: its link carries the supplied text <q>asserted_support</q> and it is still flagged. Supplied status is shown as written and never stands in for a check.</p>
+      <p class="provenance">Rows transcribed from the golden fixture in <code>fixtures/index.js</code> (marked as the exact fixture from the CodeEvidence vertical-slice spec). Findings and totals as asserted by <code>tests/golden.test.js</code>. Open the workbench, load <em>Golden fixture</em> and run validation to reproduce them.</p>
+    </footer>
+  </section>
+
+  <section class="workflow" id="workflow" aria-labelledby="h-workflow">
+    <h2 id="h-workflow">How a review moves</h2>
+    <ol class="steps">
+      <li><h3>Load a named fixture</h3><p>Choose Golden, Clean or Empty. Input is checked atomically: any schema error rejects the whole source and leaves nothing half-loaded.</p></li>
+      <li><h3>Run the rule pack</h3><p>Seven structural rules in <code>ce-structural-1</code> run over every submission and every link. One good link never cancels a bad one.</p></li>
+      <li><h3>Open a finding</h3><p>Filter by rule or ID, then open the cited submission, association and document records exactly as supplied, read-only.</p></li>
+      <li><h3>Record a human decision</h3><p>Escalate to clinical review, confirm, dispute or defer, with a note of up to 2,000 characters. Decisions sit in a separate layer and never alter a finding.</p></li>
+      <li><h3>Export the trail</h3><p>JSON carries schema and rule versions, a SHA-256 of the input, the input snapshot, every finding and the reviewer layer. CSV neutralizes formula-leading cells.</p></li>
+    </ol>
+  </section>
+
+  <section class="rules" id="rules" aria-labelledby="h-rules">
+    <div class="rules-head">
+      <h2 id="h-rules">Rule pack <code>ce-structural-1</code></h2>
+      <dl class="meta">
+        <div><dt>Schema</dt><dd><code>code-evidence-demo-1</code></dd></div>
+        <div><dt>Rule version</dt><dd><code>ce-structural-1</code></dd></div>
+        <div><dt>Provenance</dt><dd><code>fictional-demo-configuration</code></dd></div>
+        <div><dt>Demo window</dt><dd>2026-01-01 to 2026-12-31, inclusive, illustrative only</dd></div>
+      </dl>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <caption>Each rule, the level it applies to and when it fires. A fictional demo configuration, not policy.</caption>
+        <thead><tr><th scope="col">Rule</th><th scope="col">Level</th><th scope="col">Fires when</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><code>NO_ASSOCIATION</code></th><td>submission</td><td>The submission has no association.</td></tr>
+          <tr><th scope="row"><code>DUPLICATE_SUBMISSION</code></th><td>submission</td><td>The exact member, encounter and codeRef tuple repeats; the lowest submissionId is canonical.</td></tr>
+          <tr><th scope="row"><code>MEMBER_MISMATCH</code></th><td>association</td><td>Document memberId differs from the submission's.</td></tr>
+          <tr><th scope="row"><code>ENCOUNTER_MISMATCH</code></th><td>association</td><td>Document encounterId differs from the submission's.</td></tr>
+          <tr><th scope="row"><code>OUTSIDE_DEMO_WINDOW</code></th><td>association</td><td>Document serviceDate falls outside the demo window.</td></tr>
+          <tr><th scope="row"><code>SIGNATURE_METADATA_MISSING</code></th><td>association</td><td>The document records signature metadata as absent.</td></tr>
+          <tr><th scope="row"><code>ASSERTED_CONFLICT</code></th><td>association</td><td>The supplied status is <q>asserted_conflict</q>. A fixture statement, not a conclusion.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="boundary" id="boundary" aria-labelledby="h-boundary">
+    <h2 id="h-boundary">Where it stops</h2>
+    <div class="ledger">
+      <div>
+        <h3>It does</h3>
+        <ul>
+          <li>Check structure between fictional submissions, links and document records.</li>
+          <li>Show every source field it used, unchanged.</li>
+          <li>Show supplied status text as written. <q>asserted_support</q> and <q>asserted_conflict</q> come from the fixture; nothing is inferred.</li>
+          <li>Run entirely in the browser: no network calls, no account, no server.</li>
+          <li>Read only the bundled synthetic fixtures. The public demo has no file import.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>It does not</h3>
+        <ul>
+          <li>Apply CMS or RADV rules, or give clinical, coding, legal or regulatory guidance.</li>
+          <li>Diagnose, assign codes, judge medical necessity or establish clinical support.</li>
+          <li>Calculate repayment or submit anything anywhere.</li>
+          <li>Provide HIPAA certification, privacy assurance or access control.</li>
+          <li>Verify where a record came from. Fixture provenance is this repository, nothing more.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="verdict">Zero findings means <strong>structurally consistent, human clinical review required</strong>. It never means supported.</p>
+  </section>
+
+  <section class="close" aria-labelledby="h-close">
+    <h2 id="h-close">Trace the golden case yourself.</h2>
+    <a class="cta" href="./app/">Open the workbench <span aria-hidden="true">&rarr;</span></a>
+  </section>
+</main>
+
+<footer class="colophon">
+  <p>CodeEvidence demo. Synthetic records only; do not enter real patient information anywhere in this demo. Notes and decisions live in page memory until you export them. Original CSS and SVG, system fonts, no external assets.</p>
+</footer>
+</body>
+</html>
